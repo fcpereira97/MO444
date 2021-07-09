@@ -52,6 +52,8 @@ import sys, types, time, random, os
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
 ###################################################
 
+
+
 class GameState:
     """
     A GameState specifies the full game state, including the food, capsules,
@@ -120,8 +122,8 @@ class GameState:
         # Book keeping
         state.data._agentMoved = agentIndex
         state.data.score += state.data.scoreChange
-        GameState.explored.add(self)
-        GameState.explored.add(state)
+        #GameState.explored.add(self)
+        #GameState.explored.add(state)
         return state
 
     def getLegalPacmanActions( self ):
@@ -264,6 +266,10 @@ COLLISION_TOLERANCE = 0.7 # How close ghosts must be to Pacman to kill
 TIME_PENALTY = 1 # Number of points lost each round
 
 class ClassicGameRules:
+
+    movements_limit = 1000
+    movements = 0
+
     """
     These game rules manage the control flow of a game, deciding when
     and how the game starts and ends.
@@ -285,15 +291,26 @@ class ClassicGameRules:
         """
         Checks to see whether it is time to end the game.
         """
-        if state.isWin(): self.win(state, game)
-        if state.isLose(): self.lose(state, game)
+        if state.isWin():
+            self.movements = 0
+            self.win(state, game)
+            
+        if state.isLose():
+            self.movements = 0
+            self.lose(state, game)
+
+        #if self.movements >= self.movements_limit:
+        #    self.movements = 0
+        #    self.lose(state, game)
+        #else:
+        #    self.movements += 1
 
     def win( self, state, game ):
-        if not self.quiet: print("Pacman emerges victorious! Score: %d" % state.data.score)
+        #if not self.quiet: print("Pacman emerges victorious! Score: %d" % state.data.score)
         game.gameOver = True
 
     def lose( self, state, game ):
-        if not self.quiet: print("Pacman died! Score: %d" % state.data.score)
+        #if not self.quiet: print("Pacman died! Score: %d" % state.data.score)
         game.gameOver = True
 
     def getProgress(self, game):
@@ -658,10 +675,10 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         scores = [game.state.getScore() for game in games]
         wins = [game.state.isWin() for game in games]
         winRate = wins.count(True)/ float(len(wins))
-        print('Average Score:', sum(scores) / float(len(scores)))
-        print('Scores:       ', ', '.join([str(score) for score in scores]))
-        print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
-        print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
+        #print('Average Score:', sum(scores) / float(len(scores)))
+        #print('Scores:       ', ', '.join([str(score) for score in scores]))
+        #print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
+        #print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
 
     return games
 
