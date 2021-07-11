@@ -267,9 +267,6 @@ TIME_PENALTY = 1 # Number of points lost each round
 
 class ClassicGameRules:
 
-    movements_limit = 1000
-    movements = 0
-
     """
     These game rules manage the control flow of a game, deciding when
     and how the game starts and ends.
@@ -292,18 +289,10 @@ class ClassicGameRules:
         Checks to see whether it is time to end the game.
         """
         if state.isWin():
-            self.movements = 0
             self.win(state, game)
             
         if state.isLose():
-            self.movements = 0
             self.lose(state, game)
-
-        #if self.movements >= self.movements_limit:
-        #    self.movements = 0
-        #    self.lose(state, game)
-        #else:
-        #    self.movements += 1
 
     def win( self, state, game ):
         #if not self.quiet: print("Pacman emerges victorious! Score: %d" % state.data.score)
